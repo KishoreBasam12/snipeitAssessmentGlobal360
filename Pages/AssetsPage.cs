@@ -84,107 +84,76 @@ public class AssetsPage
     {
         await CreateNewLink.ClickAsync();
         await AssetMenu.ClickAsync();
-
         // Select company
         await CompanyDropdown.ClickAsync();
-
-        await CompanyOptions.First.WaitForAsync(
-            new() { State = WaitForSelectorState.Visible });
-
-        await CompanyOptions.First.WaitForAsync(
-            new() { State = WaitForSelectorState.Attached });
-
-        var companyOption = CompanyOptions
-            .Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex(@"\S") })
-            .First;
-
+        await CompanyOptions.First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+        await CompanyOptions.First.WaitForAsync(new() { State = WaitForSelectorState.Attached });
+        var companyOption = CompanyOptions.Filter(new() { HasTextRegex = new System.Text.RegularExpressions.Regex(@"\S") }).First;
         await companyOption.ClickAsync();
-
         // Get generated asset tag
         assetTag = await AssetTagInput.InputValueAsync();
-
         // Select model
         await ModelDropdown.ClickAsync();
         await ModelSearch.FillAsync(model);
-
-        await ModelOptions
-            .GetByText(model, new() { Exact = false })
-            .ClickAsync();
+        await ModelOptions.GetByText(model, new() { Exact = false }).ClickAsync();
 
         // Select status
         await StatusDropdown.ClickAsync();
         await StatusSearch.FillAsync(status);
-
         await StatusOptions
-            .GetByText(status, new() { Exact = false })
-            .ClickAsync();
-
+            .GetByText(status, new() { Exact = false }).ClickAsync();
         // Select user
         await UserDropdown.ClickAsync();
-
         // Wait until the user list finishes loading
-        await _page.Locator(
-            "ul#select2-assigned_user_select-results li .clearfix"
-        ).First.WaitForAsync(
-            new() { State = WaitForSelectorState.Visible });
-
+        await _page.Locator("ul#select2-assigned_user_select-results li .clearfix").First.WaitForAsync(new() { State = WaitForSelectorState.Visible });
         // Get the first actual user option
-        var userOption = _page.Locator(
-            "ul#select2-assigned_user_select-results li"
-        ).Filter(new()
+        var userOption = _page.Locator("ul#select2-assigned_user_select-results li").Filter(new()
         {
             Has = _page.Locator(".clearfix")
         }).First;
-
         user = (await userOption.InnerTextAsync()).Trim();
-
         await userOption.ClickAsync();
         // Save asset
         await SaveButton.ClickAsync();
-
+    }
+    public async Task successfulCreate(string sucess)
+    {
         await Expect(SuccessMessage)
             .ToContainTextAsync(
-                $"Asset with tag {assetTag} was created successfully.");
+                $"Asset with tag {assetTag} was {sucess}.");
     }
 
     public async Task SearchForAssetAsync(string model, string status)
     {
         await SearchBox.FillAsync(assetTag);
         await SearchBox.PressAsync("Enter");
-
         assetRow = AssetRows.Filter(new() { HasText = assetTag });
-
         await Expect(assetRow).ToHaveCountAsync(1);
         await Expect(assetRow).ToContainTextAsync(assetTag);
         await Expect(assetRow).ToContainTextAsync(model);
         await Expect(assetRow).ToContainTextAsync(status);
-
         var expectedUser = System.Text.RegularExpressions.Regex
             .Replace(user, @"\s*-\s*#\d+", "")
             .Replace("      ", " ")
             .Trim();
-
         await Expect(assetRow).ToContainTextAsync(expectedUser);
     }
 
-    public async Task VerifyHistoryAsync()
+public async Task openAssetsAsync()
     {
-        await assetRow!.GetByRole(
+         await assetRow!.GetByRole(
             AriaRole.Link, new() { Name = assetTag }).ClickAsync();
-
-        await HistoryTab.ClickAsync();
-
-        var historyRow = HistoryRows.Nth(1);
-
-        await Expect(historyRow.Locator("td:nth-child(4)"))
-            .ToContainTextAsync("checkout");
-
-        await Expect(historyRow.Locator("td:nth-child(5)"))
-            .ToContainTextAsync(assetTag);
-
+    }
+    public async Task openHistoryTabAsync()
+    {
+         await HistoryTab.ClickAsync();
+    }
+    public async Task VerifyHistoryAsync(string checkout)
+    {       
+        var historyRow = HistoryRows.Nth(1);       
+        await Expect(historyRow.Locator("td:nth-child(4)")).ToContainTextAsync(checkout);
+        await Expect(historyRow.Locator("td:nth-child(5)")).ToContainTextAsync(assetTag);
         var expectedUserName = user.Split(" (")[0].Trim();
-
-        await Expect(historyRow.Locator("td:nth-child(6)"))
-            .ToContainTextAsync(expectedUserName);
+        await Expect(historyRow.Locator("td:nth-child(6)")).ToContainTextAsync(expectedUserName);
     }
 }

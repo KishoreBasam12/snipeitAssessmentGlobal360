@@ -276,3 +276,4 @@ C:\Users\61413\SnipeItAssessment\SnipeIt.Tests\obj\Debug\net10.0\refint\SnipeIt.
 C:\Users\61413\SnipeItAssessment\SnipeIt.Tests\obj\Debug\net10.0\SnipeIt.Tests.pdb
 C:\Users\61413\SnipeItAssessment\SnipeIt.Tests\obj\Debug\net10.0\SnipeIt.Tests.genruntimeconfig.cache
 C:\Users\61413\SnipeItAssessment\SnipeIt.Tests\obj\Debug\net10.0\ref\SnipeIt.Tests.dll
+C:\Users\61413\SnipeItAssessment\SnipeIt.Tests\obj\Debug\net10.0\SnipeIt.Tests.sourcelink.json
