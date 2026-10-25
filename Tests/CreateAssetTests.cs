@@ -1,5 +1,3 @@
-// using Microsoft.Playwright;
-// using NUnit.Framework;
 using SnipeIt.Tests.Pages;
 using SnipeIt.Tests.TestData;
 namespace SnipeIt.Tests.Tests;
@@ -13,12 +11,10 @@ public class CreateAssetTests : PlaywrightTestBase
         // Get login credentials from environment variables.
         // Use default credentials if environment variables are not set.
         var username =
-            Environment.GetEnvironmentVariable("SNIPEIT_USERNAME")
-            ?? "admin";
+            Environment.GetEnvironmentVariable("SNIPEIT_USERNAME")?? "admin";
 
         var password =
-            Environment.GetEnvironmentVariable("SNIPEIT_PASSWORD")
-            ?? "password";
+            Environment.GetEnvironmentVariable("SNIPEIT_PASSWORD")?? "password";
 
         // Initialise the page objects.
         var loginPage = new LoginPage(Page);
@@ -27,9 +23,8 @@ public class CreateAssetTests : PlaywrightTestBase
         var assetDetailsPage = new AssetDetailsPage(Page);
         var historyPage = new HistoryPage(Page);
 
-
         //1. Login to the Snipe-IT application.
-        await loginPage.LoginAsync(username, password);
+        await loginPage.LoginAsync(AssetTestData.URL,username, password);
 
         // 2. Verify that login was successful. Assert successful login.
         await loginPage.successfulLogin();

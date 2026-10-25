@@ -14,10 +14,9 @@ public class LoginPage
 
     private ILocator LoginButton => _page.GetByRole(AriaRole.Button, new() { Name = "Login", Exact = false });
     private ILocator DashboardHeading => _page.GetByRole(AriaRole.Heading, new() { Name = "Dashboard" });
-    public async Task LoginAsync(string username, string password)
+    public async Task LoginAsync(string url,string username, string password)
     {
-        await _page.GotoAsync(
-            "https://demo.snipeitapp.com/login");
+        await _page.GotoAsync(url);
 
         await UsernameInput.FillAsync(username);
         await PasswordInput.FillAsync(password);

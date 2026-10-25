@@ -103,4 +103,3 @@ dotnet test
 - The browser runs in headed mode so the test execution can be observed.
 - The test uses Playwright assertions to validate expected results.
 - A random user is selected from the available user dropdown options.
-- The demo application's availability and data may change, which can affect test results.
